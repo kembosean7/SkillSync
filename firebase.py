@@ -7,3 +7,23 @@ firebase_admin.initialize_app(credentials_file)
 
 db = firestore.client()
 
+def register_user(name, email, passsword, role):
+
+
+    user = auth.create_user(
+        email = email,
+        password = passsword 
+    )
+
+    user_ref = db.collection('users').document(user.uid)
+    user_ref.set({
+        'name': name,
+        'email': email,
+        'role': role
+    })
+    print(f"User {name} registered successfully with email: {email}")
+
+
+
+
+register_user("Sean", "tksean7@gmail.com", "12345abc", "mentor")
