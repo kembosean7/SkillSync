@@ -1,5 +1,7 @@
 from firebase_config import auth_client, firebase_client, intialize_firebase,auth
 import bcrypt
+import firebase
+from firebase import Firebase
 
 intialize_firebase()
 def register_user(name, email, passsword, role):
@@ -35,20 +37,24 @@ def verify_password(stored_hash, password):
 
 def login_user(email, password):
     try:
-        # Firebase Authentication: Sign in with email and password
-        user = auth_client().sign_in_with_email_and_password(email, password)
+       
+        firebase_config = {
+            # Your Firebase configuration details here
+            'apiKey': "AIzaSyBlcvae2_BEgcGBUbLWrLjIgqvLtrLrCQY",
+            'authDomain': 'skillssync-ebaa9.firebaseapp.com',
+            'databaseURL': 'https://skillssync-ebaa9.firebaseio.com',
+            'projectId': 'skillssync-ebaa9',
+            'storageBucket': '337287691485',
+            'messagingSenderId': "1:337287691485:web:bcfd399d50a9decb6a6f34",
+            'appId': "G-PG9HQ8ZDVV",
+        }
         
-        # If login is successful, Firebase returns a user ID token (JWT) and user data
+        firebase = Firebase(firebase_config)
+        auth = firebase.auth()
+        
+        user = auth.sign_in_with_email_and_password(email, password)
+        
         print(f"User logged in successfully. UID: {user['localId']}, Email: {email}")
-
-        # Optionally, you can also retrieve more user data from Firestore if needed
-        user_ref = firebase_client.collection('users').document(user['localId'])
-        user_data = user_ref.get()
-
-        if user_data.exists:
-            print("User Data:", user_data.to_dict())
-        else:
-            print("No user data found in Firestore.")
 
     except Exception as e:
         print(f"Error occurred: {e}")
